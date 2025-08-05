@@ -1,0 +1,28 @@
+{
+    "name": "ophelios/pulsar-account",
+    "description": "Framework extension which provides core features for account management (login, signup, database structures, services, etc.).",
+    "type": "library",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Pulsar\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "David Tucker",
+            "email": "david.tucker@ophelios.com"
+        }
+    ],
+    "repositories": [
+        {
+            "type": "vcs",
+            "url":  "https://github.com/ophelios-studio/pulsar-mailer.git"
+        }
+    ],
+    "require": {
+        "ophelios/zephyrus": "dev-main",
+        "ophelios/pulsar-mailer": "dev-main"
+    },
+    "minimum-stability": "dev"
+}
