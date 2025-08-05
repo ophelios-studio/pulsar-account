@@ -44,7 +44,7 @@ class UserService
         $baseUrl = Application::getInstance()->getRequest()->getUrl()->getBaseUrl();
         $mailer = new Mailer();
         $mailer->setSubject(localize("accounts.emails.activation.subject", ['fullname' => $user->fullname]));
-        $mailer->setTemplate("emails/activation", [
+        $mailer->setTemplate("pulsar/emails/activation", [
             'url' => $baseUrl . "/signup-activation/" . $activationCode,
             'user' => $user,
             'contact_email' => Configuration::getApplication('contact_email')
