@@ -1,0 +1,44 @@
+{
+  "accounts": {
+    "errors": {
+      "password_breached": "The <b>password</b> has been exposed in at least %s security breach(es) and is therefore considered compromised.",
+      "username_unavailable": "The given <b>username</b> is already taken.",
+      "username_required": "The <b>username</b> must not be empty.",
+      "email_unavailable": "An account already exists for the given <b>email address</b>. Please choose another one or log in to this account.",
+      "username_invalid": "The <b>username</b> does not comply with the required format (only non-accented letters, numbers, '_', '.', and '-' are allowed).",
+      "locale_invalid": "The selected <b>language</b> is invalid.",
+      "firstname_required": "The <b>firstname</b> must not be empty.",
+      "firstname_invalid": "The <b>firstname</b> contains invalid characters.",
+      "lastname_required": "The <b>lastname</b> must not be empty.",
+      "lastname_invalid": "The <b>lastname</b> contains invalid characters.",
+      "email_required": "The <b>email</b> must not be empty.",
+      "email_invalid": "The <b>email</b> is invalid.",
+      "password_required": "The <b>password</b> must not be empty.",
+      "password_not_compliant": "The <b>password</b> does not meet security requirements. It must be at least 8 characters long, and include at least one uppercase letter, one lowercase letter, and one digit.",
+      "agree_required": "You must agree to the <b>terms and policy</b> before registering.",
+      "activation_invalid": "The activation code is invalid. Contact an administrator if you believe this is a mistake.",
+      "denied": "The authentication credentials are invalid.",
+      "not_activated": "You must first activate your account by following the instructions sent to the email address.",
+      "locked": "The authenticated user's account is locked and access has been revoked.",
+      "root_user": "The system account cannot be used via standard login.",
+      "lockdown": "You have reached the maximum number of incorrect login attempts (%s) for <b>%s</b>, and your IP address (%s) has been locked for %s for security reasons."
+    },
+
+    "success": {
+      "signup": "Welcome {fullname} 👋 An email has been sent to {email} to confirm your account. Once confirmed, you can login with your credentials.",
+      "activation": "Your account <b>{email}</b> has been successfully activated 🎉 You may now proceed with the authentication process using your credentials."
+    },
+
+    "emails": {
+      "activation": {
+        "subject": "👋 Welcome {fullname} - Activate Your Account",
+        "title": "👋 Welcome",
+        "description": "Dear {fullname}, <br><br>We are excited to welcome you to our platform! You're just one step away from unlocking the full experience. Please activate your account by clicking the link below:",
+        "information": "If the activation link doesn't work, copy and paste the following URL into your browser: {activation_url}. If you have any questions or need assistance, feel free to reach out to us at {support_email}.",
+        "labels": {
+          "activate": "Activate My Account"
+        }
+      }
+    }
+  }
+}
