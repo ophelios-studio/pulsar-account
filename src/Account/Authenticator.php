@@ -83,12 +83,12 @@ class Authenticator
     /**
      * @throws RecognizerException
      */
-    public function automatedLogin(): void
+    public function automatedLogin(): bool
     {
         try {
             $remember = Remember::recognize();
             if (is_null($remember)) { // No cookie found
-                return;
+                return false;
             }
         } catch (RecognizerException $e) {
             Remember::destroy();
@@ -98,7 +98,7 @@ class Authenticator
         $user = AuthenticationService::authenticateByToken($remember->getIdentifier(), $remember->getValidator());
         if (is_null($user)) {
             Remember::destroy();
-            return;
+            return false;
         }
 
         try {
@@ -114,6 +114,7 @@ class Authenticator
         $remember->sendSequenceCookie(); // resend new sequence cookie
         UserService::updateLastConnection($user->id);
         Passport::registerUser($user);
+        return true;
     }
 
     private function remember(User $user): void

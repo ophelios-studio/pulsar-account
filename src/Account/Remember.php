@@ -93,7 +93,7 @@ class Remember
             throw new RecognizerException(RecognizerException::ERR_SEQUENCER_MISMATCH);
         }
 
-        if ($token->user_agent->raw != $this->userAgent) {
+        if ($token->user_agent != $this->userAgent) {
             throw new RecognizerException(RecognizerException::ERR_USER_AGENT_MISMATCH);
         }
     }
