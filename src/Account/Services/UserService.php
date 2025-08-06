@@ -48,14 +48,14 @@ class UserService
         $user = (object) [
             'firstname' => $form->getValue('firstname'),
             'lastname' => $form->getValue('lastname'),
-            'email' => $gitHubUser->email
+            'email' => $gitHubUser->email,
+            'access_token' => $gitHubUser->access_token,
         ];
         $userId = new UserBroker()->insert($user);
         new UserAuthenticationBroker()->insertFromGitHub($userId, $gitHubUser);
         new UserSettingBroker(Application::getInstance())->insert($userId, $user);
 
-        $extension = pathinfo($gitHubUser->avatar_url, PATHINFO_EXTENSION);
-        $filename = Cryptography::randomString(32) . '.' . $extension;
+        $filename = Cryptography::randomString(32) . '.png';
         self::downloadGitHubAvatar($gitHubUser->avatar_url, $filename);
 
         $user = self::read($userId);
@@ -76,6 +76,10 @@ class UserService
         $user = self::readByUsername($form->getValue('email'));
         if (!$user->isActivated()) {
             $form->addError('email', localize("accounts.errors.email_not_activated"));
+            throw new FormException($form);
+        }
+        if (!is_null($user->authentication->oauth_provider)) {
+            $form->addError('email', localize("accounts.errors.cannot_reset_password_oauth", $user->authentication->oauth_provider));
             throw new FormException($form);
         }
         $newPassword = new UserAuthenticationBroker()->resetPassword($user);
@@ -120,6 +124,7 @@ class UserService
     {
         $context = stream_context_create([
             'http' => [
+                'header' => "User-Agent: MyApp/1.0\r\n",
                 'timeout' => 10 // Timeout after 10 seconds if the download fails
             ]
         ]);

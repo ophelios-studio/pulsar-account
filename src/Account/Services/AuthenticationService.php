@@ -18,6 +18,11 @@ class AuthenticationService
         return User::build(new UserAuthenticationBroker()->findByAuthentication($username, $password));
     }
 
+    public static function authenticateByOauth(string $provider, string $uid): ?User
+    {
+        return User::build(new UserAuthenticationBroker()->findByOauthUid($provider, $uid));
+    }
+
     /**
      * Tries to find the user matching the given activation code. Should be used when a user is newly created or the
      * password has been reset.

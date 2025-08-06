@@ -43,12 +43,12 @@ class UserAuthenticationBroker extends DatabaseBroker
         return new UserBroker()->findById($user->id);
     }
 
-    public function findByProviderUserId(string $provider, string $userId): ?stdClass
+    public function findByOauthUid(string $provider, string $uid): ?stdClass
     {
         $sql = "SELECT * 
                   FROM pulsar.user_authentication 
-                 WHERE login_provider = ? 
-                   AND login_provider_user_id = ?";
+                 WHERE oauth_provider = ? 
+                   AND oauth_uid = ?";
         $user = $this->selectSingle($sql, [$provider, $userId]);
         if (is_null($user)) {
             return null;

@@ -24,11 +24,14 @@
       "lockdown": "You have reached the maximum number of incorrect login attempts (%s) for <b>%s</b>, and your IP address (%s) has been locked for %s for security reasons.",
       "email_not_found": "The email address you entered does not exist in our records. Please check for any typos or try a different email address.",
       "email_not_activated": "You did not confirmed your email address yet. Please refer to the email you received to confirm your account before resetting the password.",
-      "new_password_confirmation_failed": "Password confirmation does not match the entered password."
+      "new_password_confirmation_failed": "Password confirmation does not match the entered password.",
+      "invalid_provider": "The OAuth provider is invalid.",
+      "cannot_reset_password_oauth": "Your account was setup using an OAuth provider (%s) and thus it is impossible to reset the password. Login using the provider to access your account."
     },
 
     "success": {
       "signup": "Welcome {fullname} 👋 An email has been sent to {email} to confirm your account. Once confirmed, you can login with your credentials.",
+      "signup_github": "Welcome {fullname} 👋 Your account has been successfully created from your GitHub signin.",
       "activation": "Your account <b>{email}</b> has been successfully activated 🎉 You may now proceed with the authentication process using your credentials.",
       "reset_password": "Your password was successfully reset 🎉 An email has been sent to your email address with further instructions.",
       "password_updated": "Your password has been updated successfully 🎉."
