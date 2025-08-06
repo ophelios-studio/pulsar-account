@@ -49,7 +49,7 @@ class UserAuthenticationBroker extends DatabaseBroker
                   FROM pulsar.user_authentication 
                  WHERE oauth_provider = ? 
                    AND oauth_uid = ?";
-        $user = $this->selectSingle($sql, [$provider, $userId]);
+        $user = $this->selectSingle($sql, [$provider, $uid]);
         if (is_null($user)) {
             return null;
         }
