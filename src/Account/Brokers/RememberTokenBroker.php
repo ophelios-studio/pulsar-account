@@ -26,8 +26,8 @@ class RememberTokenBroker extends DatabaseBroker
 
     public function remember(stdClass $remember): void
     {
-        $sql = "DELETE FROM pulsar.user_remember_token WHERE user_id = ? and user_agent->>'raw' = ?";
-        $this->query($sql, [$remember->user_id, $remember->user_agent->raw]);
+        $sql = "DELETE FROM pulsar.user_remember_token WHERE user_id = ? and user_agent = ?";
+        $this->query($sql, [$remember->user_id, $remember->user_agent]);
 
         $sql = "INSERT INTO pulsar.user_remember_token(identifier, validation, iteration, user_agent, ip_address, user_id, expire) 
                 VALUES (?, ?, ?, ?, ?, ?, ?)";
@@ -35,7 +35,7 @@ class RememberTokenBroker extends DatabaseBroker
             $remember->identifier, // Equivalent of "username"
             Cryptography::hashPassword($remember->validator), // Equivalent of "password"
             $remember->sequence, // Update on each login for security measure
-            json_encode($remember->user_agent),
+            $remember->user_agent,
             $remember->ip_address,
             $this->userId,
             $remember->expire
