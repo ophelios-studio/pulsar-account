@@ -1,0 +1,14 @@
+{layout layout.latte}
+
+{varType Pulsar\Account\Entities\User $user}
+{varType string $contact_email}
+{varType string $new_password}
+
+{block content}
+    <div class="text">
+        <h2>{localize("accounts.emails.reset.title")|noescape}</h2>
+        <p>{localize("accounts.emails.reset.description", $user->fullname)|noescape}</p>
+        <p class="code" style="text-align: center; font-size: 32px; letter-spacing: 4px;">{$new_password}</p>
+        <p>{localize("accounts.emails.reset.information", $contact_email)|noescape}</p>
+    </div>
+{/block}

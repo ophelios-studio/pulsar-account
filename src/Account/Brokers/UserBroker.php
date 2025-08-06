@@ -13,6 +13,12 @@ class UserBroker extends DatabaseBroker
         return $this->selectSingle($sql, [$userId]);
     }
 
+    public function findByUsername(string $username): stdClass
+    {
+        $sql = "SELECT * FROM pulsar.view_user WHERE username = ?";
+        return $this->selectSingle($sql, [$username]);
+    }
+
     public function findProfileById(int $userId): stdClass
     {
         $sql = "SELECT * FROM pulsar.view_user_profile WHERE id = ?";

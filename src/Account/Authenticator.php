@@ -4,6 +4,7 @@ use Pulsar\Account\Exceptions\AuthenticationBruteForceException;
 use Pulsar\Account\Exceptions\AuthenticationDeniedException;
 use Pulsar\Account\Exceptions\AuthenticationLockedException;
 use Pulsar\Account\Exceptions\AuthenticationNotConfirmedException;
+use Pulsar\Account\Exceptions\AuthenticationPasswordResetException;
 use Pulsar\Account\Exceptions\AuthenticationRootException;
 use Pulsar\Account\Services\AuthenticationService;
 use Pulsar\Account\Services\UserService;
@@ -47,6 +48,9 @@ class Authenticator
         }
         if ($user->id == 1) {
             throw new AuthenticationRootException();
+        }
+        if ($user->authentication->password_reset) {
+            throw new AuthenticationPasswordResetException($user->username);
         }
         if ($configuration['enabled']) {
             $bruteForceProtection->clear($username);

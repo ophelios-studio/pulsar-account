@@ -21,12 +21,17 @@
       "not_activated": "You must first activate your account by following the instructions sent to the email address.",
       "locked": "The authenticated user's account is locked and access has been revoked.",
       "root_user": "The system account cannot be used via standard login.",
-      "lockdown": "You have reached the maximum number of incorrect login attempts (%s) for <b>%s</b>, and your IP address (%s) has been locked for %s for security reasons."
+      "lockdown": "You have reached the maximum number of incorrect login attempts (%s) for <b>%s</b>, and your IP address (%s) has been locked for %s for security reasons.",
+      "email_not_found": "The email address you entered does not exist in our records. Please check for any typos or try a different email address.",
+      "email_not_activated": "You did not confirmed your email address yet. Please refer to the email you received to confirm your account before resetting the password.",
+      "new_password_confirmation_failed": "Password confirmation does not match the entered password."
     },
 
     "success": {
       "signup": "Welcome {fullname} 👋 An email has been sent to {email} to confirm your account. Once confirmed, you can login with your credentials.",
-      "activation": "Your account <b>{email}</b> has been successfully activated 🎉 You may now proceed with the authentication process using your credentials."
+      "activation": "Your account <b>{email}</b> has been successfully activated 🎉 You may now proceed with the authentication process using your credentials.",
+      "reset_password": "Your password was successfully reset 🎉 An email has been sent to your email address with further instructions.",
+      "password_updated": "Your password has been updated successfully 🎉."
     },
 
     "emails": {
@@ -38,6 +43,13 @@
         "labels": {
           "activate": "Activate My Account"
         }
+      },
+
+      "reset": {
+        "subject": "🔐 Password Reset",
+        "title": "🔐 Reset Your Password",
+        "description": "Dear %s, <br><br>A password reset request has been initiated for your account through the forgot password. Below is your new temporary password to log into your account.",
+        "information": "You will be forced to change the password before accessing the application.<br><br>If you have any issues resetting your password or have questions, please contact our support at %s."
       }
     }
   }

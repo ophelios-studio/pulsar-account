@@ -106,9 +106,9 @@ class UserAuthenticationBroker extends DatabaseBroker
         $sql = "UPDATE pulsar.user_authentication 
                    SET password_hash = ?, 
                        validator = ?, 
-                       activation = null, 
                        grace_secret = null, 
-                       password_compromised = false 
+                       password_compromised = false,
+                       password_reset = false 
                  WHERE id = ?";
         $this->query($sql, [
             $hashedPassword,
@@ -117,22 +117,23 @@ class UserAuthenticationBroker extends DatabaseBroker
         ]);
     }
 
-    public function reinitializePassword(User $user): string
+    public function resetPassword(User $user): string
     {
         $this->deleteAllMfaMethods($user->id);
         $this->deleteAllRecovery($user->id);
         $this->deleteAllRememberMe($user->id);
-        $activation = Cryptography::randomString(64);
+        $newPassword = Cryptography::randomString(16);
+        $passwordHash = Cryptography::hashPassword($newPassword);
         $sql = "UPDATE pulsar.user_authentication 
-                   SET password_hash = NULL,
-                       activation = ?,
+                   SET password_hash = ?,
+                       password_reset = true,
                        grace_secret = NULL
                  WHERE id = ?";
         $this->query($sql, [
-            $activation,
+            $passwordHash,
             $user->id
         ]);
-        return $activation;
+        return $newPassword;
     }
 
     public function activate(User $user): void

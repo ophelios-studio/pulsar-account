@@ -1,6 +1,8 @@
 <?php namespace Pulsar\Account\Validators;
 
 use Pulsar\Account\AccountRules;
+use Pulsar\Account\Brokers\UserAuthenticationBroker;
+use Pulsar\Account\Brokers\UserBroker;
 use Pulsar\Account\Entities\User;
 use Zephyrus\Application\Form;
 use Zephyrus\Application\Rule;
@@ -65,23 +67,38 @@ class UserValidator
         }
     }
 
+    public static function assertPasswordReset(Form $form): void
+    {
+        $form->field('email', [
+            Rule::required(localize("accounts.errors.email_required")),
+            Rule::email(localize("accounts.errors.email_invalid")),
+            new Rule(function ($value) {
+                return new UserBroker()->emailExists($value);
+            }, localize("accounts.errors.email_not_found"))
+        ]);
+        if (!$form->verify()) {
+            throw new FormException($form);
+        }
+    }
+
     public static function assertPasswordUpdate(Form $form, bool $oldPasswordNeeded = true): void
     {
         if ($oldPasswordNeeded) {
             $form->field('old_password', [
-                AccountRules::passwordVerification(localize("profile.errors.old_password_invalid"))
+                AccountRules::passwordVerification(localize("accounts.errors.old_password_invalid"))
             ]);
         }
         $form->field('new_password', [
-            Rule::required(localize("profile.errors.new_password_required")),
-            Rule::passwordCompliant(localize("profile.errors.new_password_not_compliant")),
+            Rule::required(localize("accounts.errors.password_required")),
+            Rule::passwordCompliant(localize("accounts.errors.password_not_compliant")),
             AccountRules::passwordBreach()
         ]);
         $form->field('new_password_confirmation', [
-            Rule::sameAs('new_password', localize("profile.errors.new_password_confirmation_failed"))
+            Rule::sameAs('new_password', localize("accounts.errors.new_password_confirmation_failed"))
         ]);
         if (!$form->verify()) {
             Form::removeMemorizedValue('old_password');
+            Form::removeMemorizedValue('new_password');
             Form::removeMemorizedValue('new_password_confirmation');
             throw new FormException($form);
         }
