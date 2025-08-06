@@ -42,17 +42,17 @@ class UserService
         return $new;
     }
 
-    public static function signupByGitHub(Form $form, stdClass $gitHubUser): User
+    public static function signupByGitHub(Form $form, stdClass $gitHubUser, string $accessToken): User
     {
         UserValidator::assertSignupFromGitHub($form);
         $user = (object) [
             'firstname' => $form->getValue('firstname'),
             'lastname' => $form->getValue('lastname'),
             'email' => $gitHubUser->email,
-            'access_token' => $gitHubUser->access_token,
+            'access_token' => $accessToken,
         ];
         $userId = new UserBroker()->insert($user);
-        new UserAuthenticationBroker()->insertFromGitHub($userId, $gitHubUser);
+        new UserAuthenticationBroker()->insertFromGitHub($userId, $user);
         new UserSettingBroker(Application::getInstance())->insert($userId, $user);
 
         $filename = Cryptography::randomString(32) . '.png';
@@ -135,5 +135,4 @@ class UserService
         $saved = file_put_contents(ROOT_DIR . '/public/assets/avatars/' . $filename, $avatarContent);
         return $saved !== false;
     }
-
 }
