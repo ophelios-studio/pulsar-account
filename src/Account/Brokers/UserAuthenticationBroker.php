@@ -198,7 +198,7 @@ class UserAuthenticationBroker extends DatabaseBroker
             null,
             $userId,
             'github',
-            $new->id,
+            $new->uid,
             $new->access_token
         ]);
     }

@@ -50,6 +50,7 @@ class UserService
             'lastname' => $form->getValue('lastname'),
             'email' => $gitHubUser->email,
             'access_token' => $accessToken,
+            'uid' => $gitHubUser->id
         ];
         $userId = new UserBroker()->insert($user);
         new UserAuthenticationBroker()->insertFromGitHub($userId, $user);
@@ -132,7 +133,7 @@ class UserService
         if ($avatarContent === false) {
             return false;
         }
-        $saved = file_put_contents(ROOT_DIR . '/public/assets/avatars/' . $filename, $avatarContent);
+        $saved = file_put_contents(ROOT_DIR . '/public/assets/images/avatars/' . $filename, $avatarContent);
         return $saved !== false;
     }
 }
