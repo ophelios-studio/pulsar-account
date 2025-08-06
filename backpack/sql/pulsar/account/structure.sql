@@ -18,6 +18,7 @@ CREATE TABLE pulsar.user_authentication
     username TEXT NOT NULL, -- Used to authenticate (could be a copy of the email)
     password_hash TEXT NULL DEFAULT NULL,
     password_compromised BOOLEAN NOT NULL DEFAULT FALSE,
+    password_reset BOOLEAN NOT NULL DEFAULT FALSE,
     activation TEXT NULL, -- Random token used for account activation
     validator TEXT NOT NULL, -- Special random value to use as specific salting for remember me
     grace_secret TEXT DEFAULT NULL, -- When a user chose to skip MFA for 20 days

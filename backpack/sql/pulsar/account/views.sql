@@ -20,6 +20,7 @@ CREATE VIEW pulsar.view_user_authentication AS
       username,
       password_hash,
       password_compromised,
+      password_reset,
       activation,
       validator,
       locked,
