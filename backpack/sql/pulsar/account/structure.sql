@@ -19,9 +19,9 @@ CREATE TABLE pulsar.user_authentication
     password_hash TEXT NULL DEFAULT NULL,
     password_compromised BOOLEAN NOT NULL DEFAULT FALSE,
     password_reset BOOLEAN NOT NULL DEFAULT FALSE,
-    login_provider TEXT NOT NULL DEFAULT 'local', -- Can be github, x, etc.
-    login_provider_user_id TEXT NULL DEFAULT NULL,
-    login_provider_access_token TEXT NULL DEFAULT NULL,
+    oauth_provider TEXT NULL DEFAULT NULL, -- Can be github, x, etc.
+    oauth_uid TEXT NULL DEFAULT NULL,
+    oauth_access_token TEXT NULL DEFAULT NULL,
     activation TEXT NULL, -- Random token used for account activation
     validator TEXT NOT NULL, -- Special random value to use as specific salting for remember me
     grace_secret TEXT DEFAULT NULL, -- When a user chose to skip MFA for 20 days

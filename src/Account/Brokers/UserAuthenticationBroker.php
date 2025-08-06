@@ -186,13 +186,13 @@ class UserAuthenticationBroker extends DatabaseBroker
         return $activation;
     }
 
-    public function insertFromGitHub(int $userId, stdClass $new): string
+    public function insertFromGitHub(int $userId, stdClass $new): void
     {
         $sql = "INSERT INTO pulsar.user_authentication(username, validator, password_hash, activation, id, 
-                                       login_provider, login_provider_user_id, login_provider_access_token) 
+                                       oauth_provider, oauth_uid, oauth_access_token) 
                 VALUES(?, ?, ?, ?, ?, ?, ?, ?)";
         $this->query($sql, [
-            $new->username ?? $new->email,
+            $new->email,
             Cryptography::randomString(64),
             null,
             null,
@@ -201,25 +201,6 @@ class UserAuthenticationBroker extends DatabaseBroker
             $new->id,
             $new->access_token
         ]);
-        return $new->access_token;
-    }
-
-    public function insertFromX(int $userId, stdClass $new): string
-    {
-        $sql = "INSERT INTO pulsar.user_authentication(username, validator, password_hash, activation, id, 
-                                       login_provider, login_provider_user_id, login_provider_access_token) 
-                VALUES(?, ?, ?, ?, ?, ?, ?, ?)";
-        $this->query($sql, [
-            $new->username ?? $new->email,
-            Cryptography::randomString(64),
-            null,
-            null,
-            $userId,
-            'x',
-            $new->id,
-            $new->access_token
-        ]);
-        return $new->access_token;
     }
 
     public function update(User $old, stdClass $user): void

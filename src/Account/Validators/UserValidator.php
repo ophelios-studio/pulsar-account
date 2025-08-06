@@ -67,6 +67,24 @@ class UserValidator
         }
     }
 
+    public static function assertSignupFromGitHub(Form $form): void
+    {
+        $form->field('firstname', [
+            Rule::required(localize("accounts.errors.firstname_required")),
+            Rule::name(localize("accounts.errors.firstname_invalid"))
+        ]);
+        $form->field('lastname', [
+            Rule::required(localize("accounts.errors.lastname_required")),
+            Rule::name(localize("accounts.errors.lastname_invalid"))
+        ]);
+        $form->field('agree', [
+            Rule::required(localize("accounts.errors.agree_required"))
+        ]);
+        if (!$form->verify()) {
+            throw new FormException($form);
+        }
+    }
+
     public static function assertPasswordReset(Form $form): void
     {
         $form->field('email', [

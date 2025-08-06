@@ -27,9 +27,9 @@ CREATE VIEW pulsar.view_user_authentication AS
       last_connection,
       superuser,
       grace_secret,
-      login_provider,
-      login_provider_user_id,
-      login_provider_access_token,
+      oauth_provider,
+      oauth_uid,
+      oauth_access_token,
 
       -- MFA
       (

@@ -11,6 +11,8 @@ use Zephyrus\Application\Form;
 use Zephyrus\Core\Application;
 use Zephyrus\Core\Configuration;
 use Zephyrus\Exceptions\FormException;
+use stdClass;
+use Zephyrus\Security\Cryptography;
 
 class UserService
 {
@@ -38,6 +40,27 @@ class UserService
         $new = self::read($userId);
         self::sendActivationEmail($new, $activationCode);
         return $new;
+    }
+
+    public static function signupByGitHub(Form $form, stdClass $gitHubUser): User
+    {
+        UserValidator::assertSignupFromGitHub($form);
+        $user = (object) [
+            'firstname' => $form->getValue('firstname'),
+            'lastname' => $form->getValue('lastname'),
+            'email' => $gitHubUser->email
+        ];
+        $userId = new UserBroker()->insert($user);
+        new UserAuthenticationBroker()->insertFromGitHub($userId, $gitHubUser);
+        new UserSettingBroker(Application::getInstance())->insert($userId, $user);
+
+        $extension = pathinfo($gitHubUser->avatar_url, PATHINFO_EXTENSION);
+        $filename = Cryptography::randomString(32) . '.' . $extension;
+        self::downloadGitHubAvatar($gitHubUser->avatar_url, $filename);
+
+        $user = self::read($userId);
+        new UserBroker()->updateAvatar($user, $filename);
+        return $user;
     }
 
     public static function updatePassword(User $user, Form $form): User
@@ -92,4 +115,20 @@ class UserService
         $mailer->addRecipient($user->email, $user->fullname);
         $mailer->send();
     }
+
+    private static function downloadGitHubAvatar(string $avatarUrl, string $filename): bool
+    {
+        $context = stream_context_create([
+            'http' => [
+                'timeout' => 10 // Timeout after 10 seconds if the download fails
+            ]
+        ]);
+        $avatarContent = file_get_contents($avatarUrl, false, $context);
+        if ($avatarContent === false) {
+            return false;
+        }
+        $saved = file_put_contents(ROOT_DIR . '/public/assets/avatars/' . $filename, $avatarContent);
+        return $saved !== false;
+    }
+
 }
