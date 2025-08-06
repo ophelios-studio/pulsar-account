@@ -1,15 +1,19 @@
 <?php namespace Pulsar\Account;
 
+use Pulsar\Account\Entities\User;
 use Pulsar\Account\Exceptions\AuthenticationBruteForceException;
 use Pulsar\Account\Exceptions\AuthenticationDeniedException;
 use Pulsar\Account\Exceptions\AuthenticationLockedException;
 use Pulsar\Account\Exceptions\AuthenticationNotConfirmedException;
 use Pulsar\Account\Exceptions\AuthenticationPasswordResetException;
 use Pulsar\Account\Exceptions\AuthenticationRootException;
+use Pulsar\Account\Exceptions\RecognizerException;
 use Pulsar\Account\Services\AuthenticationService;
+use Pulsar\Account\Services\RememberTokenService;
 use Pulsar\Account\Services\UserService;
 use Zephyrus\Core\Application;
 use Zephyrus\Core\Configuration;
+use Zephyrus\Core\Session;
 
 class Authenticator
 {
@@ -58,12 +62,62 @@ class Authenticator
         UserService::updateLastConnection($user->id);
         Passport::registerUser($user);
         if (!is_null($request->getParameter('remember'))) {
-            $this->remember();
+            $this->remember($user);
         }
     }
 
-    private function remember(): void
+    public function logout(): void
     {
-        // TODO:
+        $remember = Remember::recognize();
+        if (!is_null($remember)) {
+            $identifier = $remember->getIdentifier();
+            $token = RememberTokenService::readByIdentifier(Passport::getUserId(), $identifier);
+            if (!is_null($token)) {
+                RememberTokenService::remove(Passport::getUserId(), $token->id);
+            }
+            Remember::destroy();
+        }
+        Session::destroy();
+    }
+
+    /**
+     * @throws RecognizerException
+     */
+    public function automatedLogin(): void
+    {
+        try {
+            $remember = Remember::recognize();
+            if (is_null($remember)) { // No cookie found
+                return;
+            }
+        } catch (RecognizerException $e) {
+            Remember::destroy();
+            throw $e;
+        }
+
+        $user = AuthenticationService::authenticateByToken($remember->getIdentifier(), $remember->getValidator());
+        if (is_null($user)) {
+            Remember::destroy();
+            return;
+        }
+
+        try {
+            $remember->validateAuthenticationToken($user->matching_token);
+        } catch (RecognizerException $e) {
+            Remember::destroy();
+            RememberTokenService::remove($user->id, $user->matching_token->id);
+            throw $e;
+        }
+
+        $remember->regenerateSequence();
+        RememberTokenService::updateSequence($user->id, $user->matching_token->id, $remember->getSequence());
+        $remember->sendSequenceCookie(); // resend new sequence cookie
+        UserService::updateLastConnection($user->id);
+        Passport::registerUser($user);
+    }
+
+    private function remember(User $user): void
+    {
+        RememberTokenService::remember($user);
     }
 }

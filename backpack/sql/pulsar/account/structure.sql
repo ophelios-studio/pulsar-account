@@ -52,7 +52,7 @@ CREATE TABLE pulsar.user_remember_token
     validation TEXT, -- Validation hash to authenticate identity
     iteration TEXT, -- Updates each automated login (sequencer)
     ip_address TEXT NULL DEFAULT NULL,
-    user_agent JSONB NULL DEFAULT NULL,
+    user_agent TEXT NULL DEFAULT NULL,
     expire TIMESTAMP,
     access TIMESTAMP DEFAULT now(), -- Last time the token was used for automated login
     created_at TIMESTAMP DEFAULT now(),

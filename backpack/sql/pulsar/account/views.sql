@@ -59,3 +59,22 @@ SELECT
 
 FROM pulsar.view_user_profile vup;
 
+-- ##################################################################################################################
+-- REMEMBERED TOKENS VIEW
+-- ##################################################################################################################
+CREATE VIEW pulsar.view_user_remember_token AS
+    SELECT
+        id,
+        identifier,
+        validation,
+        iteration,
+        user_agent,
+        ip_address,
+        access,
+        expire,
+        expire::date - now()::date as remaining_days,
+        expire < now() as expired,
+        created_at,
+        user_id
+    FROM pulsar.user_remember_token;
+

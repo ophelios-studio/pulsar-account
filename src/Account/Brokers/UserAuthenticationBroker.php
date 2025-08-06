@@ -92,7 +92,7 @@ class UserAuthenticationBroker extends DatabaseBroker
         $sql = 'UPDATE pulsar.user_remember_token SET access = now() WHERE id = ?';
         $this->query($sql, [$token->id]);
         $user = new UserBroker()->findById($token->user_id);
-        $user->matching_token = $token; // TODO: ???
+        $user->matching_token = $token;
         return $user;
     }
 
