@@ -14,7 +14,10 @@ class UserAuthentication extends Entity
     public bool $locked;
     public ?string $last_connection; // Can be null is never connected
     public bool $superuser;
-    public ?UserOauth $oauth;
+    public string $login_provider;
+    public ?string $login_provider_user_id;
+    public ?string $login_provider_access_token;
+
     /**
      * @var UserMfa[]
      */

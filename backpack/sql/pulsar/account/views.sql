@@ -27,6 +27,9 @@ CREATE VIEW pulsar.view_user_authentication AS
       last_connection,
       superuser,
       grace_secret,
+      login_provider,
+      login_provider_user_id,
+      login_provider_access_token,
 
       -- MFA
       (
@@ -38,10 +41,7 @@ CREATE VIEW pulsar.view_user_authentication AS
           ))
           FROM pulsar.user_mfa mfa
           WHERE mfa.user_id = user_authentication.id
-      ) AS mfa_methods,
-
-      -- OAuth
-      pulsar.get_user_oauth(id) AS oauth
+      ) AS mfa_methods
 
   FROM pulsar.user_authentication;
 

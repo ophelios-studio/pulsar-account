@@ -43,6 +43,19 @@ class UserAuthenticationBroker extends DatabaseBroker
         return new UserBroker()->findById($user->id);
     }
 
+    public function findByProviderUserId(string $provider, string $userId): ?stdClass
+    {
+        $sql = "SELECT * 
+                  FROM pulsar.user_authentication 
+                 WHERE login_provider = ? 
+                   AND login_provider_user_id = ?";
+        $user = $this->selectSingle($sql, [$provider, $userId]);
+        if (is_null($user)) {
+            return null;
+        }
+        return new UserBroker()->findById($user->id);
+    }
+
     /**
      * Used when the user has MFA method enabled and is unable to use its device for some reason. The user can use one
      * of his recovery codes combined with its password to enter the application. Each code can be used only once.
@@ -171,6 +184,42 @@ class UserAuthenticationBroker extends DatabaseBroker
             $userId
         ]);
         return $activation;
+    }
+
+    public function insertFromGitHub(int $userId, stdClass $new): string
+    {
+        $sql = "INSERT INTO pulsar.user_authentication(username, validator, password_hash, activation, id, 
+                                       login_provider, login_provider_user_id, login_provider_access_token) 
+                VALUES(?, ?, ?, ?, ?, ?, ?, ?)";
+        $this->query($sql, [
+            $new->username ?? $new->email,
+            Cryptography::randomString(64),
+            null,
+            null,
+            $userId,
+            'github',
+            $new->id,
+            $new->access_token
+        ]);
+        return $new->access_token;
+    }
+
+    public function insertFromX(int $userId, stdClass $new): string
+    {
+        $sql = "INSERT INTO pulsar.user_authentication(username, validator, password_hash, activation, id, 
+                                       login_provider, login_provider_user_id, login_provider_access_token) 
+                VALUES(?, ?, ?, ?, ?, ?, ?, ?)";
+        $this->query($sql, [
+            $new->username ?? $new->email,
+            Cryptography::randomString(64),
+            null,
+            null,
+            $userId,
+            'x',
+            $new->id,
+            $new->access_token
+        ]);
+        return $new->access_token;
     }
 
     public function update(User $old, stdClass $user): void
