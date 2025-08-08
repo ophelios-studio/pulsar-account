@@ -5,6 +5,7 @@ use Pulsar\Account\Exceptions\AuthenticationBruteForceException;
 use Pulsar\Account\Exceptions\AuthenticationDeniedException;
 use Pulsar\Account\Exceptions\AuthenticationLockedException;
 use Pulsar\Account\Exceptions\AuthenticationNotConfirmedException;
+use Pulsar\Account\Exceptions\AuthenticationPasswordCompromisedException;
 use Pulsar\Account\Exceptions\AuthenticationPasswordResetException;
 use Pulsar\Account\Exceptions\AuthenticationRootException;
 use Pulsar\Account\Exceptions\RecognizerException;
@@ -24,6 +25,8 @@ class Authenticator
      * @throws AuthenticationNotConfirmedException
      * @throws AuthenticationRootException
      * @throws AuthenticationBruteForceException
+     * @throws AuthenticationPasswordResetException
+     * @throws AuthenticationPasswordCompromisedException
      */
     public function login(): void
     {
@@ -55,6 +58,9 @@ class Authenticator
         }
         if ($user->authentication->password_reset) {
             throw new AuthenticationPasswordResetException($user->username);
+        }
+        if (UserService::isPasswordBreach($password)) {
+            throw new AuthenticationPasswordCompromisedException($user->username);
         }
         if ($configuration['enabled']) {
             $bruteForceProtection->clear($username);

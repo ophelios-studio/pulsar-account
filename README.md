@@ -54,7 +54,7 @@ public function login(): Response
     try {
         new Authenticator()->login();
     } catch (AuthenticationPasswordResetException $e) {
-        return $this->redirect("/?view=forgot-password&state=" . $e->getState());
+        return $this->redirect("/?view=reset-password&state=" . $e->getState());
     } catch (AuthenticationException $e) {
         Flash::error($e->getUserMessage());
         return $this->redirect("/");

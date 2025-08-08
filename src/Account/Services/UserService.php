@@ -1,10 +1,13 @@
 <?php namespace Pulsar\Account\Services;
 
+use Pulsar\Account\Api\PwnedApi;
 use Pulsar\Account\Brokers\UserAuthenticationBroker;
 use Pulsar\Account\Brokers\UserBroker;
 use Pulsar\Account\Brokers\UserSettingBroker;
 use Pulsar\Account\Entities\User;
 use Pulsar\Account\Entities\UserProfile;
+use Pulsar\Account\Exceptions\AuthenticationPasswordCompromisedException;
+use Pulsar\Account\Utilities;
 use Pulsar\Account\Validators\UserValidator;
 use Pulsar\Mailer\Mailer;
 use Zephyrus\Application\Form;
@@ -12,6 +15,7 @@ use Zephyrus\Core\Application;
 use Zephyrus\Core\Configuration;
 use Zephyrus\Exceptions\FormException;
 use stdClass;
+use Zephyrus\Exceptions\HttpRequesterException;
 use Zephyrus\Security\Cryptography;
 
 class UserService
@@ -90,6 +94,21 @@ class UserService
     public static function updateLastConnection(int $userId): void
     {
         new UserAuthenticationBroker()->updateLastConnection($userId);
+    }
+
+    public static function isPasswordBreach(string $password): bool
+    {
+        $compromised = false;
+        $config = Utilities::getPwnedConfiguration();
+        if ($config->isEnabled()) {
+            try {
+                $breaches = PwnedApi::findBreachCount($password);
+                $compromised = $breaches >= $config->getTolerance();
+            } catch (HttpRequesterException $e) {
+                // Ignore HTTP errors to avoid crash caused by unavailability of service.
+            }
+        }
+        return $compromised;
     }
 
     private static function sendActivationEmail(User $user, string $activationCode): void

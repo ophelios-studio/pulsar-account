@@ -27,7 +27,6 @@ class UserAuthenticationBroker extends DatabaseBroker
         if (is_null($user) || !Cryptography::verifyHashedPassword($password, $user->password_hash)) {
             return null;
         }
-        $this->checkCompromisedPassword($user->id, $password);
         return new UserBroker()->findById($user->id);
     }
 
