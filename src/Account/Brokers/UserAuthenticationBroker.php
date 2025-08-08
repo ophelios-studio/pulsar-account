@@ -1,11 +1,8 @@
 <?php namespace Pulsar\Account\Brokers;
 
-use Pulsar\Account\Api\PwnedApi;
 use Pulsar\Account\Entities\User;
-use Pulsar\Account\Utilities;
 use stdClass;
 use Zephyrus\Database\DatabaseBroker;
-use Zephyrus\Exceptions\HttpRequesterException;
 use Zephyrus\Security\Cryptography;
 
 class UserAuthenticationBroker extends DatabaseBroker
@@ -95,20 +92,6 @@ class UserAuthenticationBroker extends DatabaseBroker
         return $user;
     }
 
-    public function checkCompromisedPassword(int $userId, string $password): void
-    {
-        $compromised = false;
-        $config = Utilities::getPwnedConfiguration();
-        if ($config->isEnabled()) {
-            try {
-                $compromised = PwnedApi::findBreachCount($password) >= $config->getTolerance();
-            } catch (HttpRequesterException $e) {
-                // Ignore HTTP errors to avoid crash caused by unavailability of service.
-            }
-        }
-        parent::query("UPDATE pulsar.user_authentication SET password_compromised = ? WHERE id = ?", [$compromised, $userId]);
-    }
-
     public function updatePassword(User $user, string $newPassword): void
     {
         $this->deleteAllMfaMethods($user->id);
@@ -118,8 +101,7 @@ class UserAuthenticationBroker extends DatabaseBroker
         $sql = "UPDATE pulsar.user_authentication 
                    SET password_hash = ?, 
                        validator = ?, 
-                       grace_secret = null, 
-                       password_compromised = false,
+                       grace_secret = null,
                        password_reset = false 
                  WHERE id = ?";
         $this->query($sql, [
