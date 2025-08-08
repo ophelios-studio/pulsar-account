@@ -97,3 +97,27 @@ private function attemptAutomatedLogin(): ?Response
     return null;
 }
 ```
+
+### Forgot password
+
+To allow a forgot password behavior, you need to build a form which contains the email address to the user which 
+requires a password reset.
+
+```latte
+{include "zf-field-email", "Email address", "email", [
+    required: true,
+    autofocus: true
+]}
+```
+
+The processing is then straight forward using the `userService` class.
+
+```php
+#[Post("/forgot-password")]
+public function resetPassword(): Response
+{
+    UserService::resetPassword($this->buildForm());
+    Flash::success(localize("accounts.success.reset_password"));
+    return $this->redirect("/");
+}
+```
