@@ -30,3 +30,40 @@ files into the project with the standard Publisher class.
 ```shell
 composer update
 ```
+
+## Usage
+
+### Remember me
+
+To allow the secure remember me feature, you need to include a checkbox field with the name "remember" on your login 
+form. It will be processed automatically during the login phase.
+
+```latte
+{include "zf-field-checkbox", "Remember me on this device", "remember"}
+```
+
+Then, to automatically login users which have selected the remember option, you need to include the following 
+script in the `before` method of your master Controller class.
+
+```php
+public function before(): ?Response
+{
+    return $this->attemptAutomatedLogin()
+        ?? parent::before();
+}
+
+private function attemptAutomatedLogin(): ?Response
+{
+    if (!Passport::isAuthenticated()) {
+        try {
+            $authenticator = new Authenticator();
+            if ($authenticator->automatedLogin()) {
+                return $this->redirect($this->request->getRoute());
+            }
+        } catch (RecognizerException $exception) {
+            Flash::error($exception->getMessage());
+        }
+    }
+    return null;
+}
+```
