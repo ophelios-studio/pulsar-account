@@ -5,12 +5,12 @@ use Zephyrus\Security\Cryptography;
 
 class AuthenticationPasswordResetException extends AuthenticationException
 {
-    private string $state;
-    private string $username;
+    protected string $state;
+    protected string $username;
 
-    public function __construct(string $username)
+    public function __construct(string $username, string $message = "You need to change your password before you can login.")
     {
-        parent::__construct("You need to change your password before you can login.");
+        parent::__construct($message);
         $this->state = Cryptography::randomString(16);
         $this->username = $username;
         Session::set('reset_password_state', $this->state);

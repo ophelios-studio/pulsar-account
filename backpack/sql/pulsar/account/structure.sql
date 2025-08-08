@@ -17,7 +17,6 @@ CREATE TABLE pulsar.user_authentication
     id INT PRIMARY KEY NOT NULL, -- 1 to 1 relationship with user_profile
     username TEXT NOT NULL, -- Used to authenticate (could be a copy of the email)
     password_hash TEXT NULL DEFAULT NULL,
-    password_compromised BOOLEAN NOT NULL DEFAULT FALSE,
     password_reset BOOLEAN NOT NULL DEFAULT FALSE,
     oauth_provider TEXT NULL DEFAULT NULL, -- Can be github, x, etc.
     oauth_uid TEXT NULL DEFAULT NULL,

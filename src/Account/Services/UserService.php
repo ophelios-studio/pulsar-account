@@ -6,7 +6,6 @@ use Pulsar\Account\Brokers\UserBroker;
 use Pulsar\Account\Brokers\UserSettingBroker;
 use Pulsar\Account\Entities\User;
 use Pulsar\Account\Entities\UserProfile;
-use Pulsar\Account\Exceptions\AuthenticationPasswordCompromisedException;
 use Pulsar\Account\Utilities;
 use Pulsar\Account\Validators\UserValidator;
 use Pulsar\Mailer\Mailer;
