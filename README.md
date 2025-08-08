@@ -33,6 +33,36 @@ composer update
 
 ## Usage
 
+### Login
+The login process requires sending two fields : `username` and `password` (even if the username is an email).
+
+```latte
+{include "zf-field-email", "Email address", "username"}
+{include "zf-field-password", 'Password', "password", [
+    visibility: true
+]}
+```
+
+Then the `post` controller method should interface with the provided `Authenticator` class. This class makes sure to throw
+precise exceptions for various cases of errors that could happen. You can use the global `AuthenticationException` to catch
+them all together or refine for specific use case (e.g., forgot password scenario as seen below).
+
+```php
+#[Post("/")]
+public function login(): Response
+{
+    try {
+        new Authenticator()->login();
+    } catch (AuthenticationPasswordResetException $e) {
+        return $this->redirect("/?view=forgot-password&state=" . $e->getState());
+    } catch (AuthenticationException $e) {
+        Flash::error($e->getUserMessage());
+        return $this->redirect("/");
+    }
+    return $this->redirect("/app");
+}
+```
+
 ### Remember me
 
 To allow the secure remember me feature, you need to include a checkbox field with the name "remember" on your login 
