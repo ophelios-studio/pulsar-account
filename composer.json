@@ -22,7 +22,8 @@
     ],
     "require": {
         "ophelios/zephyrus": "dev-main",
-        "ophelios/pulsar-mailer": "dev-main"
+        "ophelios/pulsar-mailer": "dev-main",
+        "robthree/twofactorauth": "3.*"
     },
     "minimum-stability": "dev"
 }

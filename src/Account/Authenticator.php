@@ -4,6 +4,7 @@ use Pulsar\Account\Entities\User;
 use Pulsar\Account\Exceptions\AuthenticationBruteForceException;
 use Pulsar\Account\Exceptions\AuthenticationDeniedException;
 use Pulsar\Account\Exceptions\AuthenticationLockedException;
+use Pulsar\Account\Exceptions\AuthenticationMfaException;
 use Pulsar\Account\Exceptions\AuthenticationNotConfirmedException;
 use Pulsar\Account\Exceptions\AuthenticationPasswordCompromisedException;
 use Pulsar\Account\Exceptions\AuthenticationPasswordResetException;
@@ -27,12 +28,14 @@ class Authenticator
      * @throws AuthenticationBruteForceException
      * @throws AuthenticationPasswordResetException
      * @throws AuthenticationPasswordCompromisedException
+     * @throws AuthenticationMfaException
      */
     public function login(): void
     {
         $request = Application::getInstance()->getRequest();
         $username = $request->getParameter('username', '');
         $password = $request->getParameter('password', '');
+        $remember = !is_null($request->getParameter('remember'));
         $configuration = Configuration::getSecurity()->getConfiguration('bruteforce', ['enabled' => true, 'attempts' => 5]);
         if ($configuration['enabled']) {
             $bruteForceProtection = new BruteForceProtection($configuration['attempts']);
@@ -62,12 +65,22 @@ class Authenticator
         if (UserService::isPasswordBreach($password)) {
             throw new AuthenticationPasswordCompromisedException($user->username);
         }
+        if ($user->authentication->primary_mfa) {
+            $mfa = new MultiFactor($user);
+            if (!$mfa->hasGraceTime()) {
+                match ($user->authentication->primary_mfa->type) {
+                    'email' => $mfa->initiateEmail(),
+                    'otp' => $mfa->initiateAuthenticator()
+                };
+                throw new AuthenticationMfaException($user->username, $remember);
+            }
+        }
         if ($configuration['enabled']) {
             $bruteForceProtection->clear($username);
         }
         UserService::updateLastConnection($user->id);
         Passport::registerUser($user);
-        if (!is_null($request->getParameter('remember'))) {
+        if ($remember) {
             $this->remember($user);
         }
     }

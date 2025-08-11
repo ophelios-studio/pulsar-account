@@ -1,0 +1,19 @@
+{layout layout.latte}
+
+{varType Pulsar\Account\Entities\User $user}
+{varType string $authentication_code}
+{varType string $ip_address}
+{varType string $date_time}
+
+{block content}
+    <div class="text">
+        <h2>{localize("accounts.emails.authentication.title")|noescape}</h2>
+        <p>{localize("accounts.emails.authentication.description", [account: $user->username, ip_address: $ip_address, date: $date_time])|noescape}</p>
+        <br />
+        <h4><b>{localize("accounts.emails.authentication.labels.code")|noescape}</b></h4>
+        <p class="code" style="text-align: center; font-size: 32px; letter-spacing: 4px;">
+            {$authentication_code}
+        </p>
+        <p style="font-size: 12px;">{localize("accounts.emails.authentication.information")|noescape}</p>
+    </div>
+{/block}

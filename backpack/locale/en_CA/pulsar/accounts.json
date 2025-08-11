@@ -38,6 +38,15 @@
     },
 
     "emails": {
+      "authentication": {
+        "title": "🔑 Login Authorization",
+        "description": "A login attempt has been made to your <b>{account}</b> account from the address {ip_address} on {date:datetime}. Your account is currently configured to receive a login authorization code via email to prove your identity.",
+        "information": "This process prevents anyone from authenticating without having the above code. Do not share it with anyone under any circumstances, whether verbally, by email, or by SMS. If you are not the origin of this login attempt, this means that someone else has your password. It is recommended to immediately change your password in this case.",
+        "labels": {
+          "code": "Authorization Code"
+        }
+      },
+
       "activation": {
         "subject": "👋 Welcome {fullname} - Activate Your Account",
         "title": "👋 Welcome",

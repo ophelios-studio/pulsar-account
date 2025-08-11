@@ -80,11 +80,28 @@ class UserService
         return self::read($user->id);
     }
 
+    public static function enableOtpMfa(User $user): User
+    {
+        new UserMfaBroker($user)->insert('otp');
+        return self::read($user->id);
+    }
+
+    public static function disableOtpMfa(User $user): User
+    {
+        new UserMfaBroker($user)->delete('otp');
+        return self::read($user->id);
+    }
+
     public static function updatePassword(User $user, Form $form): User
     {
         UserValidator::assertPasswordUpdate($form, false);
         new UserAuthenticationBroker()->updatePassword($user, $form->getValue('new_password'));
         return self::read($user->id);
+    }
+
+    public static function updateGraceSecret(User $user, string $secret): void
+    {
+        new UserAuthenticationBroker()->updateGraceSecret($user->id, $secret);
     }
 
     public static function resetPassword(Form $form): void
