@@ -28,7 +28,9 @@ class UserAuthentication extends Entity
     public static function build(?stdClass $row): ?static
     {
         $object = parent::build($row);
-        $object->mfa_methods = UserMfa::buildArray($row->mfa_methods);
+        if (!is_null($object) && !is_null($object->mfa_methods)) {
+            $object->mfa_methods = UserMfa::buildArray($row->mfa_methods);
+        }
         return $object;
     }
 
