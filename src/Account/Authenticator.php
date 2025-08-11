@@ -68,11 +68,12 @@ class Authenticator
         if ($user->authentication->primary_mfa) {
             $mfa = new MultiFactor($user);
             if (!$mfa->hasGraceTime()) {
-                match ($user->authentication->primary_mfa->type) {
+                $type = $user->authentication->primary_mfa->type;
+                match ($type) {
                     'email' => $mfa->initiateEmail(),
                     'otp' => $mfa->initiateAuthenticator()
                 };
-                throw new AuthenticationMfaException($user->username, $remember);
+                throw new AuthenticationMfaException($user->username, $type, $remember);
             }
         }
         if ($configuration['enabled']) {
