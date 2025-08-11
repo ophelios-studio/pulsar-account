@@ -68,6 +68,7 @@ CREATE TABLE pulsar.user_mfa
     id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY, -- Prevent id override
     type TEXT NOT NULL, -- Email, sms, otp, yubi, ...
     secret TEXT NULL DEFAULT NULL, -- Optional associated secret (OTP)
+    is_primary BOOLEAN NOT NULL DEFAULT FALSE, -- First method to use
     created_at TIMESTAMP DEFAULT now(),
     user_id INT NOT NULL,
     FOREIGN KEY (user_id) REFERENCES pulsar.user_profile (id)

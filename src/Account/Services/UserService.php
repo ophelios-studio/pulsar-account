@@ -3,6 +3,7 @@
 use Pulsar\Account\Api\PwnedApi;
 use Pulsar\Account\Brokers\UserAuthenticationBroker;
 use Pulsar\Account\Brokers\UserBroker;
+use Pulsar\Account\Brokers\UserMfaBroker;
 use Pulsar\Account\Brokers\UserSettingBroker;
 use Pulsar\Account\Entities\User;
 use Pulsar\Account\Entities\UserProfile;
@@ -65,6 +66,18 @@ class UserService
         $user = self::read($userId);
         new UserBroker()->updateAvatar($user, $filename);
         return $user;
+    }
+
+    public static function enableEmailMfa(User $user): User
+    {
+        new UserMfaBroker($user)->insert('email');
+        return self::read($user->id);
+    }
+
+    public static function disableEmailMfa(User $user): User
+    {
+        new UserMfaBroker($user)->delete('email');
+        return self::read($user->id);
     }
 
     public static function updatePassword(User $user, Form $form): User

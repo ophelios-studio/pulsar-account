@@ -30,12 +30,24 @@ CREATE VIEW pulsar.view_user_authentication AS
       oauth_uid,
       oauth_access_token,
 
+      -- Primary MFA
+     (SELECT jsonb_build_object(
+        'id', mfa.id,
+        'type', mfa.type,
+        'secret', mfa.secret,
+        'is_primary', mfa.is_primary,
+        'created_at', mfa.created_at
+     )
+     FROM pulsar.user_mfa mfa
+     WHERE mfa.user_id = user_authentication.id AND mfa.is_primary) as primary_mfa,
+
       -- MFA
       (
           SELECT jsonb_agg(jsonb_build_object(
               'id', mfa.id,
               'type', mfa.type,
               'secret', mfa.secret,
+              'is_primary', mfa.is_primary,
               'created_at', mfa.created_at
           ))
           FROM pulsar.user_mfa mfa

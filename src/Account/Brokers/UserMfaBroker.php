@@ -5,23 +5,53 @@ use Zephyrus\Database\DatabaseBroker;
 
 class UserMfaBroker extends DatabaseBroker
 {
-    public function insert(User $user, string $type, ?string $secret = null): void
+    private User $user;
+
+    public function __construct(User $user)
     {
-        $sql = "INSERT INTO pulsar.user_mfa(type, secret, user_id) 
-                VALUES(?, ?, ?)";
-        $this->query($sql, [
+        parent::__construct();
+        $this->user = $user;
+    }
+
+    public function insert(string $type, ?string $secret = null): int
+    {
+        $primary = is_null($this->user->authentication->primary_mfa);
+        $sql = "INSERT INTO pulsar.user_mfa(type, secret, user_id, is_primary) 
+                VALUES(?, ?, ?, ?) RETURNING id";
+        return $this->query($sql, [
             $type,
             $secret,
-            $user->id
+            $this->user->id,
+            $primary
+        ])->id;
+    }
+
+    public function delete(string $type): void
+    {
+        $mfa = $this->user->authentication->getMfa($type);
+        if ($mfa?->is_primary) {
+            foreach ($this->user->authentication->mfa_methods as $method) {
+                if ($method->type != $type) {
+                    $this->setPrimary($method->id);
+                    break;
+                }
+            }
+        }
+        $sql = "DELETE FROM pulsar.user_mfa WHERE user_id = ? AND type = ?";
+        $this->query($sql, [
+            $this->user->id,
+            $type
         ]);
     }
 
-    public function delete(User $old, string $type): void
+    public function setPrimary(int $newMfaId): void
     {
-        $sql = "DELETE FROM pulsar.user_mfa WHERE user_id = ? AND type = ?";
+        $sql = "UPDATE pulsar.user_mfa SET is_primary = FALSE WHERE user_id = ?";
         $this->query($sql, [
-            $old->id,
-            $type
+            $this->user->id
         ]);
+
+        $sql = "UPDATE pulsar.user_mfa SET is_primary = TRUE WHERE user_id = ? AND id = ?";
+        $this->query($sql, [$newMfaId]);
     }
 }

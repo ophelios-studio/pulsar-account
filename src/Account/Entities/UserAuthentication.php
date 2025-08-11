@@ -17,6 +17,7 @@ class UserAuthentication extends Entity
     public ?string $oauth_provider;
     public ?string $oauth_uid;
     public ?string $oauth_access_token;
+    public ?UserMfa $primary_mfa;
 
     /**
      * @var UserMfa[]
@@ -26,5 +27,15 @@ class UserAuthentication extends Entity
     public function hasMfa(): bool
     {
         return !empty($this->mfa_methods);
+    }
+
+    public function getMfa(string $type): ?UserMfa
+    {
+        foreach ($this->mfa_methods as $mfa) {
+            if ($mfa->type === $type) {
+                return $mfa;
+            }
+        }
+        return null;
     }
 }
