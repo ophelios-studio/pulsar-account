@@ -1,5 +1,6 @@
 <?php namespace Pulsar\Account\Entities;
 
+use stdClass;
 use Zephyrus\Core\Entity\Entity;
 
 class UserAuthentication extends Entity
@@ -24,6 +25,13 @@ class UserAuthentication extends Entity
      */
     public ?array $mfa_methods;
 
+    public static function build(?stdClass $row): ?static
+    {
+        $object = parent::build($row);
+        $object->mfa_methods = UserMfa::buildArray($row->mfa_methods);
+        return $object;
+    }
+
     public function hasMfa(): bool
     {
         return !empty($this->mfa_methods);
@@ -31,6 +39,9 @@ class UserAuthentication extends Entity
 
     public function getMfa(string $type): ?UserMfa
     {
+        if (is_null($this->mfa_methods)) {
+            return null;
+        }
         foreach ($this->mfa_methods as $mfa) {
             if ($mfa->type === $type) {
                 return $mfa;

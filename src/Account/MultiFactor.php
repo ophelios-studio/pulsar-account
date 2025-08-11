@@ -41,7 +41,8 @@ class MultiFactor
 
     public function hasExpired(): bool
     {
-        return is_null(Session::get('multi_factor_expiration'));
+        $expiration = Session::get('multi_factor_expiration', 0);
+        return time() > $expiration;
     }
 
     public function verifyEmailCode(string $authenticationCode): bool

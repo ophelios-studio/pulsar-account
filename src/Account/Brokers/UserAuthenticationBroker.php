@@ -215,11 +215,6 @@ class UserAuthenticationBroker extends DatabaseBroker
         ]);
     }
 
-    public function updateGraceSecret(int $userId, string $secret): void
-    {
-        $this->query("UPDATE pulsar.user_authentication SET grace_secret = ? WHERE id = ?", [$secret, $userId]);
-    }
-
     public function updateLastConnection(int $userId): void
     {
         parent::query("UPDATE pulsar.user_authentication SET last_connection = now() WHERE id = ?", [

@@ -26,7 +26,9 @@
       "email_not_activated": "You did not confirmed your email address yet. Please refer to the email you received to confirm your account before resetting the password.",
       "new_password_confirmation_failed": "Password confirmation does not match the entered password.",
       "invalid_provider": "The OAuth provider is invalid.",
-      "cannot_reset_password_oauth": "Your account was setup using an OAuth provider (%s) and thus it is impossible to reset the password. Login using the provider to access your account."
+      "cannot_reset_password_oauth": "Your account was setup using an OAuth provider (%s) and thus it is impossible to reset the password. Login using the provider to access your account.",
+      "mfa_expired": "The 2-minute window for entering the authorization code has expired. Please re-enter your authentication details to receive a new code.",
+      "mfa_invalid": "The authorization code is invalid."
     },
 
     "success": {
@@ -34,7 +36,9 @@
       "signup_github": "Welcome {fullname} 👋 Your account has been successfully created from your GitHub signin.",
       "activation": "Your account <b>{email}</b> has been successfully activated 🎉 You may now proceed with the authentication process using your credentials.",
       "reset_password": "Your password was successfully reset 🎉 An email has been sent to your email address with further instructions.",
-      "password_updated": "Your password has been updated successfully 🎉."
+      "password_updated": "Your password has been updated successfully 🎉.",
+      "mfa_email_enabled": "Two-factor email authentication has been successfully activated 🎉! A verification code will now be sent to your email for enhanced security.",
+      "mfa_email_disabled": "Two-factor email authentication has been successfully disabled 🎉."
     },
 
     "emails": {
