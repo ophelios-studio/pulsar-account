@@ -1,6 +1,7 @@
 <?php namespace Pulsar\Account;
 
 use Pulsar\Account\Entities\User;
+use Pulsar\Account\Services\UserService;
 use Zephyrus\Core\Session;
 use Zephyrus\Security\Cryptography;
 
@@ -52,6 +53,18 @@ final class Passport
             return false;
         }
         return $user->authentication->superuser;
+    }
+
+    /**
+     * Reloads the currently authenticated user into the session from the database. Useful when the authenticated user
+     * did updates to his profile.
+     *
+     * @return void
+     */
+    public static function reloadUser(): void
+    {
+        $user = UserService::read(self::getUser()->id);
+        self::registerUser($user);
     }
 
     /**

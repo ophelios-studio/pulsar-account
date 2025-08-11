@@ -7,6 +7,7 @@ use Pulsar\Account\Brokers\UserMfaBroker;
 use Pulsar\Account\Brokers\UserSettingBroker;
 use Pulsar\Account\Entities\User;
 use Pulsar\Account\Entities\UserProfile;
+use Pulsar\Account\Passport;
 use Pulsar\Account\Utilities;
 use Pulsar\Account\Validators\UserValidator;
 use Pulsar\Mailer\Mailer;
@@ -68,28 +69,28 @@ class UserService
         return $user;
     }
 
-    public static function enableEmailMfa(User $user): User
+    public static function enableEmailMfa(User $user): void
     {
         new UserMfaBroker($user)->insert('email');
-        return self::read($user->id);
+        Passport::reloadUser();
     }
 
-    public static function disableEmailMfa(User $user): User
+    public static function disableEmailMfa(User $user): void
     {
         new UserMfaBroker($user)->delete('email');
-        return self::read($user->id);
+        Passport::reloadUser();
     }
 
-    public static function enableOtpMfa(User $user): User
+    public static function enableOtpMfa(User $user): void
     {
         new UserMfaBroker($user)->insert('otp');
-        return self::read($user->id);
+        Passport::reloadUser();
     }
 
-    public static function disableOtpMfa(User $user): User
+    public static function disableOtpMfa(User $user): void
     {
         new UserMfaBroker($user)->delete('otp');
-        return self::read($user->id);
+        Passport::reloadUser();
     }
 
     public static function updatePassword(User $user, Form $form): User
