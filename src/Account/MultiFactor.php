@@ -51,8 +51,11 @@ class MultiFactor
         if (is_null($code)) {
             return false;
         }
-        Session::remove('email_factor_code');
-        return $authenticationCode == $code;
+        if ($authenticationCode == $code) {
+            Session::remove('email_factor_code');
+            return true;
+        }
+        return false;
     }
 
     public function verifyAuthenticatorCode(string $authenticationCode): bool
