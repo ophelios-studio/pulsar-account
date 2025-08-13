@@ -93,6 +93,15 @@ class UserService
         Passport::reloadUser();
     }
 
+    public static function setPrimaryMfa(User $user, int $mfaId): void
+    {
+        $broker = new UserMfaBroker($user);
+        if ($broker->exists($mfaId)) {
+            $broker->setPrimary($mfaId);
+            Passport::reloadUser();
+        }
+    }
+
     public static function updatePassword(User $user, Form $form): User
     {
         UserValidator::assertPasswordUpdate($form, false);

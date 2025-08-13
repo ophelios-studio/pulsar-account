@@ -38,7 +38,10 @@
       "reset_password": "Your password was successfully reset 🎉 An email has been sent to your email address with further instructions.",
       "password_updated": "Your password has been updated successfully 🎉.",
       "mfa_email_enabled": "Two-factor email authentication has been successfully activated 🎉! A verification code will now be sent to your email for enhanced security.",
-      "mfa_email_disabled": "Two-factor email authentication has been successfully disabled 🎉."
+      "mfa_email_disabled": "Two-factor email authentication has been successfully disabled 🎉.",
+      "mfa_otp_enabled": "Two-factor OTP authentication has been successfully activated 🎉! A verification code will now be needed from your Authenticator application for enhanced security.",
+      "mfa_otp_disabled": "Two-factor OTP authentication has been successfully disabled 🎉.",
+      "mfa_update": "Your Two-Factor setting has been successfully updated 🎉."
     },
 
     "emails": {

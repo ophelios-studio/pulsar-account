@@ -26,6 +26,12 @@ class UserMfaBroker extends DatabaseBroker
         ])->id;
     }
 
+    public function exists(int $identifier): bool
+    {
+        $sql = "SELECT COUNT(*) as n FROM pulsar.user_mfa WHERE user_id = ? AND id = ?";
+        return $this->selectSingle($sql, [$this->user->id, $identifier])->n > 0;
+    }
+
     public function delete(string $type): void
     {
         $mfa = $this->user->authentication->getMfa($type);
