@@ -87,6 +87,16 @@ class MultiFactor
         Session::set('authenticator_factor_image', $imageUrl);
     }
 
+    public function getAuthenticatorImage(): string
+    {
+        return Session::get('authenticator_factor_image');
+    }
+
+    public function getAuthenticatorSecret(): string
+    {
+        return Session::get('authenticator_factor_secret');
+    }
+
     private function sendPasswordAuthenticationEmail(string $authenticationCode): void
     {
         $mailer = new Mailer();
