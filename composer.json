@@ -23,7 +23,8 @@
     "require": {
         "ophelios/zephyrus": "dev-main",
         "ophelios/pulsar-mailer": "dev-main",
-        "robthree/twofactorauth": "3.*"
+        "robthree/twofactorauth": "3.*",
+        "endroid/qr-code": "^3.0"
     },
     "minimum-stability": "dev"
 }
