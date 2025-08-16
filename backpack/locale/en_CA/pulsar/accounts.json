@@ -29,7 +29,8 @@
       "cannot_reset_password_oauth": "Your account was setup using an OAuth provider (%s) and thus it is impossible to reset the password. Login using the provider to access your account.",
       "mfa_expired": "The 2-minute window for entering the authorization code has expired. Please re-enter your authentication details to receive a new code.",
       "mfa_invalid": "The authorization code is invalid.",
-      "password_oauth": "You cannot update your password because you signed in with an OAuth provider."
+      "password_oauth": "You cannot update your password because you signed in with an OAuth provider.",
+      "mfa_oauth": "You cannot update your MFA settings because you signed in with an OAuth provider."
     },
 
     "success": {
