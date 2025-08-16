@@ -58,6 +58,6 @@ class UserMfaBroker extends DatabaseBroker
         ]);
 
         $sql = "UPDATE pulsar.user_mfa SET is_primary = TRUE WHERE user_id = ? AND id = ?";
-        $this->query($sql, [$newMfaId]);
+        $this->query($sql, [$this->user->id, $newMfaId]);
     }
 }
