@@ -44,6 +44,10 @@
       "mfa_update": "Your Two-Factor setting has been successfully updated 🎉."
     },
 
+    "hints": {
+      "password_compliance": "The password must be at least 8 characters long, including at least one uppercase letter, one lowercase letter, and one digit."
+    },
+
     "emails": {
       "authentication": {
         "title": "🔑 Login Authorization",
