@@ -106,9 +106,9 @@ class UserService
         }
     }
 
-    public static function updatePassword(User $user, Form $form): User
+    public static function updatePassword(User $user, Form $form, bool $oldPasswordNeeded = false): User
     {
-        UserValidator::assertPasswordUpdate($form, false);
+        UserValidator::assertPasswordUpdate($form, $oldPasswordNeeded);
         new UserAuthenticationBroker()->updatePassword($user, $form->getValue('new_password'));
         return self::read($user->id);
     }
