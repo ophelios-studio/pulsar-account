@@ -49,6 +49,10 @@ class UserService
 
     public static function signupByGitHub(Form $form, stdClass $gitHubUser, string $accessToken): User
     {
+        if (new UserBroker()->emailExists($gitHubUser->email)) {
+            $form->addError('email', localize("accounts.errors.email_unavailable"));
+            throw new FormException($form);
+        }
         UserValidator::assertSignupFromGitHub($form);
         $user = (object) [
             'firstname' => $form->getValue('firstname'),
